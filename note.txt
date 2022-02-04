@@ -1,0 +1,3 @@
+The game code is in neo/d3xp/
+This is where you make all changes to the source code that is not part of the engine.
+This is the code for sabase.dll/.so/.dylib
