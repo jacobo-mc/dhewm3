@@ -47,7 +47,6 @@ include(CheckCXXCompilerFlag)
 include(GNUInstallDirs OPTIONAL RESULT_VARIABLE GNUINSTALLDIRS)
 
 option(CORE			"Build the core" ON)
-option(BASE			"Build the base game code" OFF)
 option(SABASE			"Build the standalone game code" ON)
 if(MSVC)
 	option(TOOLS		"Build the tools game code (Visual Studio+SDL2 only)" ON)
@@ -683,80 +682,6 @@ set(src_idlib
 
 add_globbed_headers(src_idlib "idlib")
 
-set(src_game
-	game/AF.cpp
-	game/AFEntity.cpp
-	game/Actor.cpp
-	game/Camera.cpp
-	game/Entity.cpp
-	game/BrittleFracture.cpp
-	game/Fx.cpp
-	game/GameEdit.cpp
-	game/Game_local.cpp
-	game/Game_network.cpp
-	game/Item.cpp
-	game/IK.cpp
-	game/Light.cpp
-	game/Misc.cpp
-	game/Mover.cpp
-	game/Moveable.cpp
-	game/MultiplayerGame.cpp
-	game/Player.cpp
-	game/PlayerIcon.cpp
-	game/PlayerView.cpp
-	game/Projectile.cpp
-	game/Pvs.cpp
-	game/SecurityCamera.cpp
-	game/SmokeParticles.cpp
-	game/Sound.cpp
-	game/Target.cpp
-	game/Trigger.cpp
-	game/Weapon.cpp
-	game/WorldSpawn.cpp
-	game/ai/AAS.cpp
-	game/ai/AAS_debug.cpp
-	game/ai/AAS_pathing.cpp
-	game/ai/AAS_routing.cpp
-	game/ai/AI.cpp
-	game/ai/AI_events.cpp
-	game/ai/AI_pathing.cpp
-	game/ai/AI_Vagary.cpp
-	game/gamesys/DebugGraph.cpp
-	game/gamesys/Class.cpp
-	game/gamesys/Event.cpp
-	game/gamesys/SaveGame.cpp
-	game/gamesys/SysCmds.cpp
-	game/gamesys/SysCvar.cpp
-	game/gamesys/TypeInfo.cpp
-	game/anim/Anim.cpp
-	game/anim/Anim_Blend.cpp
-	game/anim/Anim_Import.cpp
-	game/anim/Anim_Testmodel.cpp
-	game/script/Script_Compiler.cpp
-	game/script/Script_Interpreter.cpp
-	game/script/Script_Program.cpp
-	game/script/Script_Thread.cpp
-	game/physics/Clip.cpp
-	game/physics/Force.cpp
-	game/physics/Force_Constant.cpp
-	game/physics/Force_Drag.cpp
-	game/physics/Force_Field.cpp
-	game/physics/Force_Spring.cpp
-	game/physics/Physics.cpp
-	game/physics/Physics_AF.cpp
-	game/physics/Physics_Actor.cpp
-	game/physics/Physics_Base.cpp
-	game/physics/Physics_Monster.cpp
-	game/physics/Physics_Parametric.cpp
-	game/physics/Physics_Player.cpp
-	game/physics/Physics_RigidBody.cpp
-	game/physics/Physics_Static.cpp
-	game/physics/Physics_StaticMulti.cpp
-	game/physics/Push.cpp
-)
-
-add_globbed_headers(src_game "game")
-
 set(src_d3xp
 	d3xp/AF.cpp
 	d3xp/AFEntity.cpp
@@ -1140,35 +1065,6 @@ if(DEDICATED)
 	endif()
 endif()
 
-if(BASE)
-	if (AROS)
-		add_executable(base sys/aros/dll/dllglue.c ${src_game})
-		set_target_properties(base PROPERTIES OUTPUT_NAME "base.aros-${AROS_ARCH}")
-	else()
-		add_library(base SHARED ${src_game})
-	endif()
-	
-	source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX neo FILES ${src_game})
-	
-	set_target_properties(base PROPERTIES PREFIX "")
-	set_target_properties(base PROPERTIES COMPILE_DEFINITIONS "GAME_DLL")
-	target_include_directories(base PRIVATE "${CMAKE_SOURCE_DIR}/game")
-	set_target_properties(base PROPERTIES LINK_FLAGS "${ldflags}")
-	set_target_properties(base PROPERTIES INSTALL_NAME_DIR "@executable_path")
-	if (AROS)
-		target_link_libraries(base idlib dll)
-	else()
-		target_link_libraries(base idlib)
-	endif()
-
-	if(NOT APPLE AND NOT WIN32)
-		install(TARGETS base
-				RUNTIME DESTINATION "${bindir}"
-				LIBRARY DESTINATION "${libdir}"
-				ARCHIVE DESTINATION "${libdir}"
-		)
-	endif()
-endif()
 
 if(SABASE)
 	if (AROS)
